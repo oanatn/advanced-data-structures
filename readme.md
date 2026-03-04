@@ -1,0 +1,2 @@
+This is the repository containing all my assignments from the advanced data structures class.
+The easiest way to run any of the projects is to open them in C lion (the IDE from Jet Brains) and run main.c (or, depending on the project, main.cpp).
