@@ -1,0 +1,7 @@
+# ninja log v6
+4	596	7949229442464151	CMakeFiles/lab3_scoreboard.dir/main.cpp.obj	a535544990d29e71
+601	848	7949229448432602	lab3_scoreboard.exe	f57c8e983bf6e05e
+26	641	7949278242776939	CMakeFiles/lab3_scoreboard.dir/RbTree.cpp.obj	d666922c8e35abf0
+20	658	7949278242719736	CMakeFiles/lab3_scoreboard.dir/main.cpp.obj	a535544990d29e71
+30	659	7949278242822389	CMakeFiles/lab3_scoreboard.dir/Leaderboard.cpp.obj	29a5883aabb2624f
+659	824	7949278249109033	lab3_scoreboard.exe	6b24e0f4077663c7

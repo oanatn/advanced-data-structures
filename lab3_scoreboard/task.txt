@@ -1,0 +1,38 @@
+The task that this project solves:
+Problem 1: Dynamic Leaderboard
+Description
+You are maintaining a live leaderboard for an online game. Players gain and lose points over time. You must efficiently update scores and answer ranking queries.
+Operations
+You will receive QQQ operations of the following types:
+ADD player score
+ Add a new player with the given score.
+
+
+UPDATE player delta
+ Increase or decrease the player's score by delta.
+
+
+REMOVE player
+ Remove the player from the leaderboard.
+
+
+TOP k
+ Return the k players with the highest scores.
+
+
+
+Input Example
+ADD Alice 120
+ADD Bob 90
+ADD Carol 150
+UPDATE Bob 50
+TOP 2
+REMOVE Carol
+TOP 2
+Expected Output
+Carol 150
+Bob 140
+
+Bob 140
+Alice 120
+
