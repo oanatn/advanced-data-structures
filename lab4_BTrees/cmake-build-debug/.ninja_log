@@ -1,0 +1,4 @@
+# ninja log v6
+40	640	7960895281822106	CMakeFiles/lab4_BTrees.dir/main.cpp.obj	b80fcdd8ad10177a
+50	878	7960895281927231	CMakeFiles/lab4_BTrees.dir/BTree.cpp.obj	af2634eb8348dbe5
+878	1391	7960895290200831	lab4_BTrees.exe	3e6ce47e4693b221
