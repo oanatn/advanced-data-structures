@@ -1,0 +1,3 @@
+C:/laptop/oana/an II sem II/advanced data structures/lab6_Binomial_heaps/cmake-build-debug/CMakeFiles/lab6_Binomial_heaps.dir
+C:/laptop/oana/an II sem II/advanced data structures/lab6_Binomial_heaps/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/laptop/oana/an II sem II/advanced data structures/lab6_Binomial_heaps/cmake-build-debug/CMakeFiles/rebuild_cache.dir
