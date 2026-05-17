@@ -1,0 +1,3 @@
+C:/laptop/oana/an II sem II/advanced data structures/FinalProject/cmake-build-debug/CMakeFiles/FinalProject.dir
+C:/laptop/oana/an II sem II/advanced data structures/FinalProject/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/laptop/oana/an II sem II/advanced data structures/FinalProject/cmake-build-debug/CMakeFiles/rebuild_cache.dir
