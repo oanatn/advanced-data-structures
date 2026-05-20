@@ -43,6 +43,9 @@ public:
 
     void showMatchQueue();
 
+    bool saveToFile(const std::string& filename) const;
+    bool loadFromFile(const std::string& filename);
+
     void printHelp() const;
 };
 

@@ -1,0 +1,8 @@
+PLAYERS 3
+mihai 1200
+vlad 1800
+ana 1500
+MATCHES 2
+2 ana mihai 2
+1 ana vlad 1
+NEXT_MATCH_ID 3

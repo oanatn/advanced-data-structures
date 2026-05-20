@@ -29,3 +29,7 @@
 6	667	8007300026625582	CMakeFiles/FinalProject.dir/main.cpp.obj	fb5d486311e0fcb3
 18	795	8007300026745087	CMakeFiles/FinalProject.dir/TournamentManager.cpp.obj	b015bd369c6b1128
 795	1006	8007300034519052	FinalProject.exe	7351ab19eec4f970
+55	680	8009908222616240	CMakeFiles/FinalProject.dir/main.cpp.obj	fb5d486311e0fcb3
+60	735	8009908222661976	CMakeFiles/FinalProject.dir/Leaderboard.cpp.obj	80aa54b7d72d1c52
+63	982	8009908222695076	CMakeFiles/FinalProject.dir/TournamentManager.cpp.obj	b015bd369c6b1128
+983	1475	8009908231888771	FinalProject.exe	7351ab19eec4f970

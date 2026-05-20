@@ -2,6 +2,8 @@
 
 #include <iostream>
 #include <sstream>
+#include <fstream>
+#include <vector>
 #include <cstdlib>
 #include <ctime>
 
@@ -12,6 +14,7 @@ TournamentManager::TournamentManager(const AppConfig& config)
 
     leaderboard.setLogger(&logger);
     matchQueue.setLogger(&logger);
+
     if (this->config.verbose) {
         std::cout << "Verbose mode enabled.\n";
     }
@@ -19,7 +22,6 @@ TournamentManager::TournamentManager(const AppConfig& config)
 
 void TournamentManager::addPlayer(const std::string& name, int score) {
     logger.clear();
-
     logger.log("Command: add a new player to the leaderboard.");
     logger.log("The leaderboard stores players inside a red-black tree ordered by score.");
 
@@ -30,7 +32,6 @@ void TournamentManager::addPlayer(const std::string& name, int score) {
 
 void TournamentManager::updateScore(const std::string& name, int delta) {
     logger.clear();
-
     logger.log("Command: update a player's score.");
     logger.log("The old score is removed from the red-black tree, then the new score is inserted.");
 
@@ -41,7 +42,6 @@ void TournamentManager::updateScore(const std::string& name, int delta) {
 
 void TournamentManager::removePlayer(const std::string& name) {
     logger.clear();
-
     logger.log("Command: remove a player from the leaderboard.");
     logger.log("Removing a player deletes their score node from the red-black tree.");
 
@@ -52,7 +52,6 @@ void TournamentManager::removePlayer(const std::string& name) {
 
 void TournamentManager::showTopPlayers(int k) {
     logger.clear();
-
     logger.log("Command: show top players.");
     logger.log("The red-black tree is traversed from highest score to lowest score.");
 
@@ -63,7 +62,6 @@ void TournamentManager::showTopPlayers(int k) {
 
 void TournamentManager::showLeaderboardStructure() {
     logger.clear();
-
     logger.log("Command: show leaderboard structure.");
     logger.log("The red-black tree is printed sideways: right subtree, root, left subtree.");
 
@@ -201,6 +199,140 @@ void TournamentManager::showMatchQueue() {
     logger.print();
 }
 
+bool TournamentManager::saveToFile(const std::string& filename) const {
+    std::ofstream file(filename);
+
+    if (!file) {
+        std::cout << "Could not open file for saving: " << filename << "\n";
+        return false;
+    }
+
+    std::vector<std::pair<std::string, int>> players = leaderboard.getPlayers();
+
+    file << "PLAYERS " << players.size() << "\n";
+
+    for (const auto& player : players) {
+        file << player.first << " " << player.second << "\n";
+    }
+
+    file << "MATCHES " << matches.size() << "\n";
+
+    for (const auto& entry : matches) {
+        const Match& match = entry.second;
+
+        file
+            << match.id << " "
+            << match.player1 << " "
+            << match.player2 << " "
+            << match.priority << "\n";
+    }
+
+    file << "NEXT_MATCH_ID " << nextMatchId << "\n";
+
+    std::cout << "Saved tournament to " << filename << ".\n";
+    return true;
+}
+
+bool TournamentManager::loadFromFile(const std::string& filename) {
+    std::ifstream file(filename);
+
+    if (!file) {
+        std::cout << "Could not open file for loading: " << filename << "\n";
+        return false;
+    }
+
+    std::string section;
+    int playerCount;
+
+    if (!(file >> section >> playerCount) || section != "PLAYERS" || playerCount < 0) {
+        std::cout << "Invalid file format: expected PLAYERS section.\n";
+        return false;
+    }
+
+    std::vector<std::pair<std::string, int>> loadedPlayers;
+
+    for (int i = 0; i < playerCount; i++) {
+        std::string name;
+        int score;
+
+        if (!(file >> name >> score)) {
+            std::cout << "Invalid file format while reading players.\n";
+            return false;
+        }
+
+        loadedPlayers.emplace_back(name, score);
+    }
+
+    int matchCount;
+
+    if (!(file >> section >> matchCount) || section != "MATCHES" || matchCount < 0) {
+        std::cout << "Invalid file format: expected MATCHES section.\n";
+        return false;
+    }
+
+    std::vector<Match> loadedMatches;
+
+    for (int i = 0; i < matchCount; i++) {
+        int id;
+        std::string player1;
+        std::string player2;
+        int priority;
+
+        if (!(file >> id >> player1 >> player2 >> priority)) {
+            std::cout << "Invalid file format while reading matches.\n";
+            return false;
+        }
+
+        loadedMatches.emplace_back(id, player1, player2, priority);
+    }
+
+    int loadedNextMatchId;
+
+    if (!(file >> section >> loadedNextMatchId) || section != "NEXT_MATCH_ID" || loadedNextMatchId <= 0) {
+        std::cout << "Invalid file format: expected NEXT_MATCH_ID section.\n";
+        return false;
+    }
+
+    std::vector<std::pair<std::string, int>> currentPlayers = leaderboard.getPlayers();
+
+    for (const auto& player : currentPlayers) {
+        leaderboard.remove(player.first);
+    }
+
+    matchQueue.clear();
+    matches.clear();
+
+    nextMatchId = loadedNextMatchId;
+
+    for (const auto& player : loadedPlayers) {
+        leaderboard.add(player.first, player.second);
+    }
+
+    for (const Match& match : loadedMatches) {
+        if (!leaderboard.contains(match.player1) || !leaderboard.contains(match.player2)) {
+            std::cout
+                << "Skipping match #"
+                << match.id
+                << " because one or both players do not exist.\n";
+            continue;
+        }
+
+        if (match.priority <= 0) {
+            std::cout
+                << "Skipping match #"
+                << match.id
+                << " because priority is invalid.\n";
+            continue;
+        }
+
+        matches.emplace(match.id, match);
+        matchQueue.insert(match.priority, match.id);
+    }
+
+    std::cout << "Loaded tournament from " << filename << ".\n";
+    return true;
+}
+
 void TournamentManager::printHelp() const {
     std::cout << "\nAvailable commands:\n\n";
 
@@ -215,6 +347,9 @@ void TournamentManager::printHelp() const {
 
     std::cout << "show_leaderboard_structure\n";
     std::cout << "show_match_queue\n";
+
+    std::cout << "save <file>\n";
+    std::cout << "load <file>\n";
 
     std::cout << "help\n";
     std::cout << "exit\n\n";
@@ -297,6 +432,26 @@ void TournamentManager::run() {
         }
         else if (command == "show_match_queue") {
             showMatchQueue();
+        }
+        else if (command == "save") {
+            std::string filename;
+
+            if (!(ss >> filename)) {
+                std::cout << "Usage: save <file>\n";
+                continue;
+            }
+
+            saveToFile(filename);
+        }
+        else if (command == "load") {
+            std::string filename;
+
+            if (!(ss >> filename)) {
+                std::cout << "Usage: load <file>\n";
+                continue;
+            }
+
+            loadFromFile(filename);
         }
         else if (command == "help") {
             printHelp();

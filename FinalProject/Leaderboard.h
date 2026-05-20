@@ -6,6 +6,8 @@
 
 #include <unordered_map>
 #include <string>
+#include <vector>
+#include <utility>
 
 class Leaderboard {
 private:
@@ -19,6 +21,8 @@ public:
     bool add(const std::string& player, int score);
     bool update(const std::string& player, int delta);
     bool remove(const std::string& player);
+
+    std::vector<std::pair<std::string, int>> getPlayers() const;
 
     void top(int k) const;
     void showStructure() const;

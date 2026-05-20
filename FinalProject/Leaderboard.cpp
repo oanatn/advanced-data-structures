@@ -69,3 +69,13 @@ void Leaderboard::top(int k) const {
 void Leaderboard::showStructure() const {
     tree.showTree();
 }
+
+std::vector<std::pair<std::string, int>> Leaderboard::getPlayers() const {
+    std::vector<std::pair<std::string, int>> players;
+
+    for (const auto& entry : scores) {
+        players.push_back(entry);
+    }
+
+    return players;
+}
